@@ -31,22 +31,24 @@ type PDBController struct {
 	interval      time.Duration
 	pdbNameSuffix string
 	nonReadyTTL   time.Duration
+	nsSelector    string
 }
 
 // NewPDBController initializes a new PDBController.
-func NewPDBController(interval time.Duration, client kubernetes.Interface, pdbNameSuffix string, nonReadyTTL time.Duration) (*PDBController, error) {
+func NewPDBController(interval time.Duration, client kubernetes.Interface, pdbNameSuffix string, nonReadyTTL time.Duration, nsSelector string) (*PDBController, error) {
 	controller := &PDBController{
 		Interface:     client,
 		interval:      interval,
 		pdbNameSuffix: pdbNameSuffix,
 		nonReadyTTL:   nonReadyTTL,
+		nsSelector:    nsSelector,
 	}
 
 	return controller, nil
 }
 
 func (n *PDBController) runOnce() error {
-	namespaces, err := n.CoreV1().Namespaces().List(metav1.ListOptions{})
+	namespaces, err := n.CoreV1().Namespaces().List(metav1.ListOptions{LabelSelector: n.nsSelector})
 	if err != nil {
 		return err
 	}
