@@ -1,0 +1,60 @@
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  labels:
+    app: pdb-controller
+    chart: pdb-controller-0.1.0
+    heritage: Tiller
+    release: pdb-controller
+  name: pdb-controller
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  labels:
+    app: pdb-controller
+    chart: pdb-controller-0.1.0
+    heritage: Tiller
+    release: pdb-controller
+  name: pdb-controller
+rules:
+- apiGroups:
+  - policy
+  resources:
+  - poddisruptionbudgets
+  verbs:
+  - get
+  - list
+  - watch
+  - create
+  - delete
+- apiGroups:
+  - apps
+  - ""
+  resources:
+  - deployments
+  - pods
+  - namespaces
+  - statefulsets
+  verbs:
+  - get
+  - list
+  - watch
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  labels:
+    app: pdb-controller
+    chart: pdb-controller-0.1.0
+    heritage: Tiller
+    release: pdb-controller
+  name: pdb-controller
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: pdb-controller
+subjects:
+- kind: ServiceAccount
+  name: pdb-controller
+  namespace: utility

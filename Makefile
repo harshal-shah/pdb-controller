@@ -1,8 +1,8 @@
 .PHONY: clean test check build.local build.linux build.osx build.docker build.push
 
 BINARY        ?= pdb-controller
-VERSION       ?= $(shell git describe --tags --always --dirty)
-IMAGE         ?= mikkeloscar/$(BINARY)
+VERSION       ?= $(shell git describe --tags --always)
+IMAGE         ?= harshals/$(BINARY)
 TAG           ?= $(VERSION)
 GITHEAD       = $(shell git rev-parse HEAD)
 GITURL        = $(shell git config --get remote.origin.url)
